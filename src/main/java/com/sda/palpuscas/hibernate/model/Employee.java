@@ -2,6 +2,8 @@ package com.sda.palpuscas.hibernate.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "employees")
@@ -22,10 +24,19 @@ public class Employee {
     private String email;
     @Column(name = "salary")
     private Integer salary;
-    @Column(name = "departmentId")
-    private Integer departmentId;
-    @Column(name = "managerId")
-    private Integer managerId;
+
+    @OneToOne
+    @JoinColumn(name = "accountId") //acountId este in baza de date
+    private Account account;
+    @ManyToOne
+    @JoinColumn(name = "departemtId")
+    private Department department;
+    @ManyToMany
+    @JoinTable(name = "employeesProject",
+            joinColumns = {@JoinColumn(name = "employeeId")},
+            inverseJoinColumns = {@JoinColumn(name = "projectId")})
+    private Set<Project> projectSet = new HashSet<>();
+
 
     public Integer getEmployeeId() {
         return employeeId;
@@ -83,20 +94,43 @@ public class Employee {
         this.salary = salary;
     }
 
-    public Integer getDepartmentId() {
-        return departmentId;
+
+    public Account getAccount() {
+        return account;
     }
 
-    public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    public Integer getManagerId() {
-        return managerId;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setManagerId(Integer managerId) {
-        this.managerId = managerId;
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Set<Project> getProjectSet() {
+        return projectSet;
+    }
+
+    public void setProjectSet(Set<Project> projectSet) {
+        this.projectSet = projectSet;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeId=" + employeeId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", salary=" + salary +
+                ", account=" + account +
+                '}';
     }
 }
 

@@ -6,6 +6,9 @@ import com.sda.palpuscas.hibernate.model.Project;
 import com.sda.palpuscas.hibernate.utils.SessionManager;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class EmployeeRepository {
     public Employee findById(Integer id) {
@@ -40,5 +43,14 @@ public class EmployeeRepository {
         session.update(employee);
         transaction.commit();
         session.close();
+    }
+    public List<Employee> findAllEmployeesFromDepartment(String department){
+        Session session = SessionManager.getSessionFactory().openSession();
+        String hqlquery = "from Employee e where e.department.name = :departmentName";
+        Query<Employee>employeeQuery = session.createQuery(hqlquery);
+        employeeQuery.setParameter("departmentName",department);
+        List<Employee>employees = employeeQuery.list();
+        session.close();
+        return employees;
     }
 }
